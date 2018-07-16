@@ -1,5 +1,6 @@
 # Image Super-Resolution Using Very Deep Residual Channel Attention Networks
 This PyTorch repository is for RCAN introduced in the following paper
+Full codes can be downloaded from https://github.com/yulunzhang/RCAN
 
 [Yulun Zhang](http://yulunzhang.com/), [Kunpeng Li](https://kunpengli1994.github.io/), [Kai Li](http://kailigo.github.io/), [Lichen Wang](https://sites.google.com/site/lichenwang123/), [Bineng Zhong](https://scholar.google.de/citations?user=hvRBydsAAAAJ&hl=en), and [Yun Fu](http://www1.ece.neu.edu/~yunfu/), "Image Super-Resolution Using Very Deep Residual Channel Attention Networks", ECCV 2018, [[arXiv]](https://arxiv.org/abs/1807.02758), [[supplimentary]](http://yulunzhang.com/papers/ECCV-2018-RCAN_supp.pdf)
 
