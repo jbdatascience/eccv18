@@ -18,7 +18,7 @@ The code is built on [EDSR (PyTorch)](https://github.com/thstkdgus35/EDSR-PyTorc
 Convolutional neural network (CNN) depth is of crucial importance for image super-resolution (SR). However, we observe that deeper networks for image SR are more difficult to train. The low-resolution inputs and features contain abundant low-frequency information, which is treated equally across channels, hence hindering the representational ability of CNNs. To solve these problems, we propose the very deep residual channel attention networks (RCAN). Specifically, we propose a residual in residual (RIR) structure to form very deep network, which consists of several residual groups with long skip connections. Each residual group contains some residual blocks with short skip connections. Meanwhile, RIR allows abundant low-frequency information to be bypassed through multiple skip connections, making the main network focus on learning high-frequency information. Furthermore, we propose a channel attention mechanism to adaptively rescale channel-wise features by considering interdependencies among channels. Extensive experiments show that our RCAN achieves better accuracy and visual improvements against state-of-the-art methods.
 
 ![CA](/Figs/CA.PNG)
-Residual channel attention block (RCAB) architecture.
+Channel attention (CA) architecture.
 ![RCAB](/Figs/RCAB.PNG)
 Residual channel attention block (RCAB) architecture.
 ![RCAN](/Figs/RCAN.PNG)
@@ -29,78 +29,66 @@ The architecture of our proposed residual channel attention network (RCAN).
 
 1. Download DIV2K training data (800 training + 100 validtion images) from [DIV2K dataset](https://data.vision.ee.ethz.ch/cvl/DIV2K/) or [SNU_CVLab](https://cv.snu.ac.kr/research/EDSR/DIV2K.tar).
 
-2. Place all the HR images in 'Prepare_TrainData/DIV2K/DIV2K_HR'.
+2. Specify '--dir_data' based on the HR and LR images path. In option.py, '--ext' is set as 'sep_reset', which first convert .png to .npy. If all the training images (.png) are converted to .npy files, then set '--ext sep' to skip converting files.
 
-3. Run 'Prepare_TrainData_HR_LR_BI/BD/DN.m' in matlab to generate LR images for BI, BD, and DN models respectively.
-
-4. Run 'th png_to_t7.lua' to convert each .png image to .t7 file in new folder 'DIV2K_decoded'.
-
-5. Specify the path of 'DIV2K_decoded' to '-datadir' in 'RDN_TrainCode/code/opts.lua'.
-
-For more informaiton, please refer to [EDSR(Torch)](https://github.com/LimBee/NTIRE2017).
+For more informaiton, please refer to [EDSR(PyTorch)](https://github.com/thstkdgus35/EDSR-PyTorch).
 
 ### Begin to train
 
-1. (optional) Download models for our paper and place them in '/RDN_TrainCode/experiment/model'.
+1. (optional) Download models for our paper and place them in '/RCAN_TrainCode/experiment/model'.
 
-    All the models can be downloaded from [Dropbox](https://www.dropbox.com/sh/ngcvqdas167gol2/AAAdJe9w6s2fpo_KEGZe7d4Ra?dl=0) or [Baidu](https://pan.baidu.com/s/116FAzKnaJnAdxY_B6ENp_A).
+    All the models can be downloaded from [Dropbox](https://www.dropbox.com/s/mjbcqkd4nwhr6nu/models_ECCV2018RCAN.zip?dl=0). Models for BD degradation model will be updated soon.
 
-2. Cd to 'RDN_TrainCode/code', run the following scripts to train models.
+2. Cd to 'RCAN_TrainCode/code', run the following scripts to train models.
 
-    **You can use scripts in file 'TrainRDN_scripts' to train models for our paper.**
+    **You can use scripts in file 'TrainRCAN_scripts' to train models for our paper.**
 
     ```bash
-    # BI, scale 2, 3, 4
-    # BIX2F64D18C6G64P48, input=48x48, output=96x96
-    th main.lua -scale 2 -netType RDN -nFeat 64 -nFeaSDB 64 -nDenseBlock 16 -nDenseConv 8 -growthRate 64 -patchSize 96 -dataset div2k -datatype t7  -DownKernel BI -splitBatch 4 -trainOnly true
+    # BI, scale 2, 3, 4, 8
+    # RCAN_BIX2_G10R20P48, input=48x48, output=96x96
+    python main.py --model RCAN --save RCAN_BIX2_G10R20P48 --scale 2 --n_resgroups 10 --n_resblocks 20 --n_feats 64  --reset --chop --save_results --print_model --patch_size 96
 
-    # BIX3F64D18C6G64P32, input=32x32, output=96x96, fine-tune on RDN_BIX2.t7
-    th main.lua -scale 3 -netType resnet_cu -nFeat 64 -nFeaSDB 64 -nDenseBlock 16 -nDenseConv 8 -growthRate 64 -patchSize 96 -dataset div2k -datatype t7  -DownKernel BI -splitBatch 4 -trainOnly true  -preTrained ../experiment/model/RDN_BIX2.t7
+    # RCAN_BIX3_G10R20P48, input=48x48, output=144x144
+    python main.py --model RCAN --save RCAN_BIX3_G10R20P48 --scale 3 --n_resgroups 10 --n_resblocks 20 --n_feats 64  --reset --chop --save_results --print_model --patch_size 144 --pre_train ../experiment/model/RCAN_BIX2.pt
 
-    # BIX4F64D18C6G64P32, input=32x32, output=128x128, fine-tune on RDN_BIX2.t7
-    th main.lua -scale 4 -nGPU 1 -netType resnet_cu -nFeat 64 -nFeaSDB 64 -nDenseBlock 16 -nDenseConv 8 -growthRate 64 -patchSize 128 -dataset div2k -datatype t7  -DownKernel BI -splitBatch 4 -trainOnly true -nEpochs 1000 -preTrained ../experiment/model/RDN_BIX2.t7 
+    # RCAN_BIX4_G10R20P48, input=48x48, output=192x192
+    python main.py --model RCAN --save RCAN_BIX4_G10R20P48 --scale 4 --n_resgroups 10 --n_resblocks 20 --n_feats 64  --reset --chop --save_results --print_model --patch_size 192 --pre_train ../experiment/model/RCAN_BIX2.pt
 
-    # BD, scale 3
-    # BDX3F64D18C6G64P32, input=32x32, output=96x96, fine-tune on RDN_BIX3.t7
-    th main.lua -scale 3 -nGPU 1 -netType resnet_cu -nFeat 64 -nFeaSDB 64 -nDenseBlock 16 -nDenseConv 8 -growthRate 64 -patchSize 96 -dataset div2k -datatype t7  -DownKernel BD -splitBatch 4 -trainOnly true -nEpochs 200 -preTrained ../experiment/model/RDN_BIX3.t7
+    # RCAN_BIX8_G10R20P48, input=48x48, output=384x384
+    python main.py --model RCAN --save RCAN_BIX8_G10R20P48 --scale 8 --n_resgroups 10 --n_resblocks 20 --n_feats 64  --reset --chop --save_results --print_model --patch_size 384 --pre_train ../experiment/model/RCAN_BIX2.pt
 
-    # DN, scale 3
-    # DNX3F64D18C6G64P32, input=32x32, output=96x96, fine-tune on RDN_BIX3.t7
-    th main.lua -scale 3 -nGPU 1 -netType resnet_cu -nFeat 64 -nFeaSDB 64 -nDenseBlock 16 -nDenseConv 8 -growthRate 64 -patchSize 96 -dataset div2k -datatype t7  -DownKernel DN -splitBatch 4 -trainOnly true  -nEpochs 200 -preTrained ../experiment/model/RDN_BIX3.t7
     ```
-    Only RDN_BIX2.t7 was trained using 48x48 input patches. All other models were trained using 32x32 input patches in order to save training time.
-    However, smaller input patch size in training would lower the performance to some degree. We also set '-trainOnly true' to save GPU memory.
+
 ## Test
 ### Quick start
-1. Download models for our paper and place them in '/RDN_TestCode/model'.
+1. Download models for our paper and place them in '/RCAN_TestCode/model'.
 
-    All the models can be downloaded from [Dropbox](https://www.dropbox.com/sh/ngcvqdas167gol2/AAAdJe9w6s2fpo_KEGZe7d4Ra?dl=0) or [Baidu](https://pan.baidu.com/s/116FAzKnaJnAdxY_B6ENp_A).
+    All the models can be downloaded from [Dropbox](https://www.dropbox.com/s/mjbcqkd4nwhr6nu/models_ECCV2018RCAN.zip?dl=0). Models for BD degradation model will be updated soon.
 
-2. Run 'TestRDN.lua'
+2. Cd to 'code', run 'TestRDN.lua'
 
-    **You can use scripts in file 'TestRDN_scripts' to produce results for our paper.**
+    **You can use scripts in file 'TestRCAN_scripts' to produce results for our paper.**
 
     ```bash
-    # No self-ensemble: RDN
-    # BI degradation model, X2, X3, X4
-    th TestRDN.lua -model RDN_BIX2 -degradation BI -scale 2 -selfEnsemble false -dataset Set5
-    th TestRDN.lua -model RDN_BIX3 -degradation BI -scale 3 -selfEnsemble false -dataset Set5
-    th TestRDN.lua -model RDN_BIX4 -degradation BI -scale 4 -selfEnsemble false -dataset Set5
-    # BD degradation model, X3
-    th TestRDN.lua -model RDN_BDX3 -degradation BD -scale 3 -selfEnsemble false -dataset Set5
-    # DN degradation model, X3
-    th TestRDN.lua -model RDN_DNX3 -degradation DN -scale 3 -selfEnsemble false -dataset Set5
-
-
-    # With self-ensemble: RDN+
-    # BI degradation model, X2, X3, X4
-    th TestRDN.lua -model RDN_BIX2 -degradation BI -scale 2 -selfEnsemble true -dataset Set5
-    th TestRDN.lua -model RDN_BIX3 -degradation BI -scale 3 -selfEnsemble true -dataset Set5
-    th TestRDN.lua -model RDN_BIX4 -degradation BI -scale 4 -selfEnsemble true -dataset Set5
-    # BD degradation model, X3
-    th TestRDN.lua -model RDN_BDX3 -degradation BD -scale 3 -selfEnsemble true -dataset Set5
-    # DN degradation model, X3
-    th TestRDN.lua -model RDN_DNX3 -degradation DN -scale 3 -selfEnsemble true -dataset Set5
+    # No self-ensemble: RCAN
+    # BI degradation model, X2, X3, X4, X8
+    # RCAN_BIX2
+    python main.py --data_test MyImage --scale 2 --model RCAN --n_resgroups 10 --n_resblocks 20 --n_feats 64 --pre_train ../model/RCAN_BIX2.pt --test_only --save_results --chop --save 'RCAN' --testpath /media/yulun/Disk10T/datasets/super-resolution/LRBI --testset Set5
+    # RCAN_BIX3
+    python main.py --data_test MyImage --scale 3 --model RCAN --n_resgroups 10 --n_resblocks 20 --n_feats 64 --pre_train ../model/RCAN_BIX3.pt --test_only --save_results --chop --save 'RCAN' --testpath /media/yulun/Disk10T/datasets/super-resolution/LRBI --testset Set5
+    # RCAN_BIX4
+    python main.py --data_test MyImage --scale 4 --model RCAN --n_resgroups 10 --n_resblocks 20 --n_feats 64 --pre_train ../model/RCAN_BIX4.pt --test_only --save_results --chop --save 'RCAN' --testpath /media/yulun/Disk10T/datasets/super-resolution/LRBI --testset Set5
+    # RCAN_BIX8
+    python main.py --data_test MyImage --scale 8 --model RCAN --n_resgroups 10 --n_resblocks 20 --n_feats 64 --pre_train ../model/RCAN_BIX8.pt --test_only --save_results --chop --save 'RCAN' --testpath /media/yulun/Disk10T/datasets/super-resolution/LRBI --testset Set5
+    # With self-ensemble: RCAN+
+    # RCANplus_BIX2
+    python main.py --data_test MyImage --scale 2 --model RCAN --n_resgroups 10 --n_resblocks 20 --n_feats 64 --pre_train ../model/RCAN_BIX2.pt --test_only --save_results --chop --self_ensemble --save 'RCANplus' --testpath /media/yulun/Disk10T/datasets/super-resolution/LRBI --testset Set5
+    # RCANplus_BIX3
+    python main.py --data_test MyImage --scale 3 --model RCAN --n_resgroups 10 --n_resblocks 20 --n_feats 64 --pre_train ../model/RCAN_BIX3.pt --test_only --save_results --chop --self_ensemble --save 'RCANplus' --testpath /media/yulun/Disk10T/datasets/super-resolution/LRBI --testset Set5
+    # RCANplus_BIX4
+    python main.py --data_test MyImage --scale 4 --model RCAN --n_resgroups 10 --n_resblocks 20 --n_feats 64 --pre_train ../model/RCAN_BIX4.pt --test_only --save_results --chop --self_ensemble --save 'RCANplus' --testpath /media/yulun/Disk10T/datasets/super-resolution/LRBI --testset Set5
+    # RCANplus_BIX8
+    python main.py --data_test MyImage --scale 8 --model RCAN --n_resgroups 10 --n_resblocks 20 --n_feats 64 --pre_train ../model/RCAN_BIX8.pt --test_only --save_results --chop --self_ensemble --save 'RCANplus' --testpath /media/yulun/Disk10T/datasets/super-resolution/LRBI --testset Set5
     ```
 
 ### The whole test pipeline
