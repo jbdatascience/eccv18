@@ -65,7 +65,7 @@ For more informaiton, please refer to [EDSR(PyTorch)](https://github.com/thstkdg
 
     All the models can be downloaded from [Dropbox](https://www.dropbox.com/s/mjbcqkd4nwhr6nu/models_ECCV2018RCAN.zip?dl=0). Models for BD degradation model will be updated soon.
 
-2. Cd to 'code', run 'TestRDN.lua'
+2. Cd to '/RCAN_TestCode/code', run the following scripts.
 
     **You can use scripts in file 'TestRCAN_scripts' to produce results for our paper.**
 
@@ -107,13 +107,14 @@ For more informaiton, please refer to [EDSR(PyTorch)](https://github.com/thstkdg
 
 
 ## Results
-![PSNR_SSIM_BI](/Figs/PSNR_SSIM_BI.png)
-Table 1. Benchmark results with BI degradation model. Average PSNR/SSIM values for scaling factor ×2, ×3, and ×4.
+### Quantitative Results
+![PSNR_SSIM_BI](/Figs/psnr_bi_1.PNG)
+![PSNR_SSIM_BI](/Figs/psnr_bi_2.PNG)
+![PSNR_SSIM_BI](/Figs/psnr_bi_3.PNG)
+Quantitative results with BI degradation model. Best and second best results are highlighted and underlined
 
-![PSNR_SSIM_BD_DN](/Figs/PSNR_SSIM_BD_DN.png)
-Table 2. Benchmark results with BD and DN degradation models. Average PSNR/SSIM values for scaling factor ×3.
-
-## Results
+For more results, please refer to our [main papar](https://arxiv.org/abs/1807.02758) and [supplementary file](http://yulunzhang.com/papers/ECCV-2018-RCAN_supp.pdf).
+### Visual Results
 ![Visual_PSNR_SSIM_BI](/Figs/fig1_visual_bi_x4.PNG)
 Visual results with Bicubic (BI) degradation (4×) on “img 074” from Urban100
 
@@ -135,8 +136,8 @@ Visual comparison for 3× SR with BD model
 ![Visual_Compare_GAN_PSNR_SSIM_BD](/Figs/supp_fig1_visual_compare_gan_psnr_ssim_bi_x4_3.PNG)
 Visual comparison for 4× SR with BI model on Set14 and B100 datasets.
 The best results are highlighted. SRResNet, SRResNet VGG22, SRGAN MSE, SR-
-GAN VGG22, and SRGAN VGG54 are proposed in [9], ENet E and ENet PAT are
-proposed in [12]. These comparisons mainly show the eﬀectiveness of our proposed
+GAN VGG22, and SRGAN VGG54 are proposed in [CVPR2017SRGAN], ENet E and ENet PAT are
+proposed in [ICCV2017EnhanceNet]. These comparisons mainly show the eﬀectiveness of our proposed
 RCAN against GAN based methods
 
 ## Citation
@@ -150,13 +151,13 @@ If you find the code helpful in your resarch or work, please cite the following 
   year = {2017}
 }
 
-@inproceedings{zhang2018residual,
-    title={Residual Dense Network for Image Super-Resolution},
-    author={Zhang, Yulun and Tian, Yapeng and Kong, Yu and Zhong, Bineng and Fu, Yun},
-    booktitle={CVPR},
+@inproceedings{zhang2018rcan,
+    title={Image Super-Resolution Using Very Deep Residual Channel Attention Networks},
+    author={Zhang, Yulun and Li, Kunpeng and Li, Kai and Wang, Lichen and Zhong, Bineng and Fu, Yun},
+    booktitle={ECCV},
     year={2018}
 }
 ```
 ## Acknowledgements
-This code is built on [EDSR (Torch)](https://github.com/LimBee/NTIRE2017). We thank the authors for sharing their codes of EDSR [Torch version](https://github.com/LimBee/NTIRE2017) and [PyTorch version](https://github.com/thstkdgus35/EDSR-PyTorch).
+This code is built on [EDSR (PyTorch)](https://github.com/thstkdgus35/EDSR-PyTorch). We thank the authors for sharing their codes of EDSR [Torch version](https://github.com/LimBee/NTIRE2017) and [PyTorch version](https://github.com/thstkdgus35/EDSR-PyTorch).
 
