@@ -1,14 +1,10 @@
-# RCAN
-
-# Residual Dense Network for Image Super-Resolution
+# Image Super-Resolution Using Very Deep Residual Channel Attention Networks
 This repository is for RCAN introduced in the following paper
 
-[Yulun Zhang](http://yulunzhang.com/), [Yapeng Tian](http://yapengtian.org/), [Yu Kong](http://www1.ece.neu.edu/~yukong/), [Bineng Zhong](https://scholar.google.de/citations?user=hvRBydsAAAAJ&hl=en), and [Yun Fu](http://www1.ece.neu.edu/~yunfu/), "Residual Dense Network for Image Super-Resolution", CVPR 2018 (spotlight), [[arXiv]](https://arxiv.org/abs/1802.08797) 
+[Yulun Zhang](http://yulunzhang.com/), [Kunpeng Li](https://kunpengli1994.github.io/), [Kai Li](http://kailigo.github.io/), [Lichen Wang](https://sites.google.com/site/lichenwang123/), [Bineng Zhong](https://scholar.google.de/citations?user=hvRBydsAAAAJ&hl=en), and [Yun Fu](http://www1.ece.neu.edu/~yunfu/), "Image Super-Resolution Using Very Deep Residual Channel Attention Networks", ECCV 2018, [[arXiv]](https://arxiv.org/abs/1807.02758) 
 
 
-The code is built on [EDSR (Torch)](https://github.com/LimBee/NTIRE2017) and tested on Ubuntu 14.04 environment (Torch7, CUDA8.0, cuDNN5.1) with Titan X/1080Ti/Xp GPUs.
-
-Other implementations: [PyTorch_version](https://github.com/thstkdgus35/EDSR-PyTorch) has been implemented by Nguyễn Trần Toàn (trantoan060689@gmail.com) and merged into [EDSR_PyTorch](https://github.com/thstkdgus35/EDSR-PyTorch).
+The code is built on [EDSR (PyTorch)](https://github.com/thstkdgus35/EDSR-PyTorch) and tested on Ubuntu 14.04/16.04 environment (Python3.6, PyTorch_0.4.0, CUDA8.0, cuDNN5.1) with Titan X/1080Ti/Xp GPUs.
 
 ## Contents
 1. [Introduction](#introduction)
@@ -19,12 +15,14 @@ Other implementations: [PyTorch_version](https://github.com/thstkdgus35/EDSR-PyT
 6. [Acknowledgements](#acknowledgements)
 
 ## Introduction
-A very deep convolutional neural network (CNN) has recently achieved great success for image super-resolution (SR) and offered hierarchical features as well. However, most deep CNN based SR models do not make full use of the hierarchical features from the original low-resolution (LR) images, thereby achieving relatively-low performance. In this paper, we propose a novel residual dense network (RDN) to address this problem in image SR. We fully exploit the hierarchical features from all the convolutional layers. Speciﬁcally, we propose residual dense block (RDB) to extract abundant local features via dense connected convolutional layers. RDB further allows direct connections from the state of preceding RDB to all the layers of current RDB, leading to a contiguous memory (CM) mechanism. Local feature fusion in RDB is then used to adaptively learn more effective features from preceding and current local features and stabilizes the training of wider network. After fully obtaining dense local features, we use global feature fusion to jointly and adaptively learn global hierarchical features in a holistic way. Experiments on benchmark datasets with different degradation models show that our RDN achieves favorable performance against state-of-the-art methods.
+Convolutional neural network (CNN) depth is of crucial importance for image super-resolution (SR). However, we observe that deeper networks for image SR are more difficult to train. The low-resolution inputs and features contain abundant low-frequency information, which is treated equally across channels, hence hindering the representational ability of CNNs. To solve these problems, we propose the very deep residual channel attention networks (RCAN). Specifically, we propose a residual in residual (RIR) structure to form very deep network, which consists of several residual groups with long skip connections. Each residual group contains some residual blocks with short skip connections. Meanwhile, RIR allows abundant low-frequency information to be bypassed through multiple skip connections, making the main network focus on learning high-frequency information. Furthermore, we propose a channel attention mechanism to adaptively rescale channel-wise features by considering interdependencies among channels. Extensive experiments show that our RCAN achieves better accuracy and visual improvements against state-of-the-art methods.
 
-![RDB](/Figs/RDB.png)
-Figure 1. Residual dense block (RDB) architecture.
-![RDN](/Figs/RDN.png)
-Figure 2. The architecture of our proposed residual dense network (RDN).
+![CA](/Figs/CA.PNG)
+Residual channel attention block (RCAB) architecture.
+![RCAB](/Figs/RCAB.PNG)
+Residual channel attention block (RCAB) architecture.
+![RCAN](/Figs/RCAN.PNG)
+The architecture of our proposed residual channel attention network (RCAN).
 
 ## Train
 ### Prepare training data 
