@@ -113,7 +113,6 @@ For more informaiton, please refer to [EDSR(PyTorch)](https://github.com/thstkdg
 ![PSNR_SSIM_BI](/Figs/psnr_bi_3.PNG)
 Quantitative results with BI degradation model. Best and second best results are highlighted and underlined
 
-For more results, please refer to our [main papar](https://arxiv.org/abs/1807.02758) and [supplementary file](http://yulunzhang.com/papers/ECCV-2018-RCAN_supp.pdf).
 ### Visual Results
 ![Visual_PSNR_SSIM_BI](/Figs/fig1_visual_bi_x4.PNG)
 Visual results with Bicubic (BI) degradation (4×) on “img 074” from Urban100
@@ -139,6 +138,8 @@ The best results are highlighted. SRResNet, SRResNet VGG22, SRGAN MSE, SR-
 GAN VGG22, and SRGAN VGG54 are proposed in [CVPR2017SRGAN], ENet E and ENet PAT are
 proposed in [ICCV2017EnhanceNet]. These comparisons mainly show the eﬀectiveness of our proposed
 RCAN against GAN based methods
+
+For more results, please refer to our [main papar](https://arxiv.org/abs/1807.02758) and [supplementary file](http://yulunzhang.com/papers/ECCV-2018-RCAN_supp.pdf).
 
 ## Citation
 If you find the code helpful in your resarch or work, please cite the following papers.
